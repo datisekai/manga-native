@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: `http://192.168.1.10:6060/v1`,
+  baseURL: `https://manga-api-lf7a.vercel.app/v1`,
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
