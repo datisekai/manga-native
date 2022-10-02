@@ -75,7 +75,7 @@ const HomeScreenDetail = ({ navigation, route }) => {
                       marginTop: 20,
                     }}
                   >
-                    <AntDesign name='wifi' style={{ fontSize: 20 }} />
+                    <AntDesign name="wifi" style={{ fontSize: 20 }} />
                     <Text style={{ fontSize: 15, marginLeft: 4 }}>
                       {data?.status}
                     </Text>
@@ -89,16 +89,16 @@ const HomeScreenDetail = ({ navigation, route }) => {
                       justifyContent: "center",
                     }}
                   >
-                    <AntDesign name='user' style={{ fontSize: 20 }} />
+                    <AntDesign name="user" style={{ fontSize: 20 }} />
                     <Text style={{ fontSize: 15, marginLeft: 4 }}>
                       {data?.author ? data.author : "Đang cập nhật"}
                     </Text>
                   </View>
                 </View>
                 <Stack
-                  direction='row'
+                  direction="row"
                   divider={8}
-                  wrap='wrap'
+                  wrap="wrap"
                   style={{ marginTop: 8 }}
                 >
                   {data?.categories?.map((item) => (
@@ -123,24 +123,26 @@ const HomeScreenDetail = ({ navigation, route }) => {
               }}
             >
               <Button
-                title='Đọc từ đầu'
+                title="Đọc từ đầu"
                 onPress={() =>
                   navigation.navigate("Chap", {
                     href: data.chapters[data.chapters.length - 1].href,
                     id: href,
                     name: data?.name,
                     namechap: data.chapters[data.chapters.length - 1].name,
+                    vitri: data.chapters.length - 1,
                   })
                 }
               />
               <Button
-                title='Đọc mới nhất'
+                title="Đọc mới nhất"
                 onPress={() =>
                   navigation.navigate("Chap", {
                     href: data.chapters[0].href,
                     id: href,
                     name: data?.name,
                     namechap: data.chapters[0].name,
+                    vitri: 0,
                   })
                 }
               />
@@ -158,7 +160,7 @@ const HomeScreenDetail = ({ navigation, route }) => {
             <FlatList
               data={data?.chapters}
               style={{ minHeight: 300 }}
-              renderItem={({ item }) => (
+              renderItem={({ item, index }) => (
                 <TouchableOpacity
                   key={item.href}
                   onPress={() =>
@@ -167,6 +169,7 @@ const HomeScreenDetail = ({ navigation, route }) => {
                       id: href,
                       name: data?.name,
                       namechap: item.name,
+                      vitri: index,
                     })
                   }
                 >

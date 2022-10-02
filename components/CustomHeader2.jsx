@@ -1,13 +1,6 @@
 import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
 import React, { useState } from "react";
-import {
-  Animated,
-  FlatList,
-  Text,
-  useColorScheme,
-  View,
-  ScrollView,
-} from "react-native";
+import { FlatList, Text, useColorScheme, View, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import COLORS from "../constants/color";
 
@@ -16,6 +9,7 @@ const CustomHeader2 = ({
   namechap,
   id,
   name,
+  vitri,
   isHome = false,
   navigation,
 }) => {
@@ -39,11 +33,11 @@ const CustomHeader2 = ({
       >
         {isHome ? (
           <TouchableOpacity onPress={() => navigation.openDrawer()}>
-            <FontAwesome5 name='align-left' style={{ fontSize: 25 }} />
+            <FontAwesome5 name="align-left" style={{ fontSize: 25 }} />
           </TouchableOpacity>
         ) : (
           <FontAwesome5
-            name='angle-left'
+            name="angle-left"
             onPress={() => navigation.goBack()}
             style={{ fontSize: 30 }}
           />
@@ -61,18 +55,40 @@ const CustomHeader2 = ({
             justifyContent: "center",
           }}
         >
-          <FontAwesome5
-            name='angle-left'
-            onPress={() => {}}
-            style={{
-              fontSize: 30,
-              backgroundColor: "#d9534f",
-              color: "#fff",
-              paddingVertical: 4,
-              paddingHorizontal: 12,
-              borderRadius: 5,
-            }}
-          />
+          {vitri == data2.chapters.length - 1 ? (
+            <FontAwesome5
+              name="angle-left"
+              style={{
+                fontSize: 30,
+                backgroundColor: "#d0c3c2",
+                color: "#fff",
+                paddingVertical: 4,
+                paddingHorizontal: 12,
+                borderRadius: 5,
+              }}
+            />
+          ) : (
+            <FontAwesome5
+              name="angle-left"
+              onPress={() =>
+                navigation.navigate("Chap", {
+                  href: data2?.chapters[vitri + 1].href,
+                  id: id,
+                  name: name,
+                  namechap: data2?.chapters[vitri + 1].name,
+                  vitri: vitri + 1,
+                })
+              }
+              style={{
+                fontSize: 30,
+                backgroundColor: "#d9534f",
+                color: "#fff",
+                paddingVertical: 4,
+                paddingHorizontal: 12,
+                borderRadius: 5,
+              }}
+            />
+          )}
         </View>
         <View
           style={{
@@ -97,7 +113,6 @@ const CustomHeader2 = ({
                 flexDirection: "row",
                 justifyContent: "space-between",
                 height: 30,
-                backgroundColor: "red",
               }}
             >
               <View
@@ -114,14 +129,14 @@ const CustomHeader2 = ({
                 }}
               >
                 {combobox === true ? (
-                  <FontAwesome5 name='chevron-up' />
+                  <FontAwesome5 name="chevron-up" />
                 ) : (
-                  <FontAwesome5 name='chevron-down' />
+                  <FontAwesome5 name="chevron-down" />
                 )}
               </View>
             </TouchableOpacity>
           </View>
-          {combobox == false ? (
+          {combobox == true ? (
             <ScrollView
               nestedScrollEnabled
               style={{
@@ -143,14 +158,15 @@ const CustomHeader2 = ({
                 renderItem={({ item }) => (
                   <TouchableOpacity
                     key={item.href}
-                    onPress={() =>
+                    onPress={() => {
                       navigation.navigate("Chap", {
                         href: item.href,
                         id: id,
                         name: name,
                         namechap: item.name,
-                      })
-                    }
+                      });
+                      setCombobox(false);
+                    }}
                   >
                     <Text style={{ paddingLeft: 5, zIndex: 1000 }}>
                       {item.name}
@@ -170,18 +186,40 @@ const CustomHeader2 = ({
             justifyContent: "center",
           }}
         >
-          <FontAwesome5
-            name='angle-right'
-            onPress={() => {}}
-            style={{
-              fontSize: 30,
-              backgroundColor: "#d9534f",
-              color: "#fff",
-              paddingVertical: 4,
-              paddingHorizontal: 12,
-              borderRadius: 5,
-            }}
-          />
+          {vitri === 0 ? (
+            <FontAwesome5
+              name="angle-right"
+              style={{
+                fontSize: 30,
+                backgroundColor: "#d0c3c2",
+                color: "#fff",
+                paddingVertical: 4,
+                paddingHorizontal: 12,
+                borderRadius: 5,
+              }}
+            />
+          ) : (
+            <FontAwesome5
+              name="angle-right"
+              onPress={() =>
+                navigation.navigate("Chap", {
+                  href: data2?.chapters[vitri - 1].href,
+                  id: id,
+                  name: name,
+                  namechap: data2?.chapters[vitri - 1].name,
+                  vitri: vitri - 1,
+                })
+              }
+              style={{
+                fontSize: 30,
+                backgroundColor: "#d9534f",
+                color: "#fff",
+                paddingVertical: 4,
+                paddingHorizontal: 12,
+                borderRadius: 5,
+              }}
+            />
+          )}
         </View>
       </View>
       <View
@@ -196,7 +234,7 @@ const CustomHeader2 = ({
             <AntDesign name='hearto' style={{ fontSize: 28 }} />
           </TouchableOpacity> */}
         <TouchableOpacity onPress={() => navigation.navigate("searchs")}>
-          <AntDesign name='search1' style={{ fontSize: 30, marginLeft: 15 }} />
+          <AntDesign name="search1" style={{ fontSize: 30, marginLeft: 15 }} />
         </TouchableOpacity>
       </View>
     </View>

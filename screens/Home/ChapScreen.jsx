@@ -12,9 +12,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import DetailAPI from "../../actions/detail";
 import CustomHeader2 from "../../components/CustomHeader2";
 import { getImage, getImageDetail } from "../../utils";
+import ChapSkeleton from "../../components/Skeleton/ChapSkeleton";
 
 const ChapScreen = ({ navigation, route }) => {
-  const { href, id, name, namechap } = route.params;
+  const { href, id, name, namechap, vitri } = route.params;
   const { data: data2 } = useQuery(["allchaps", id], () => {
     if (id) {
       return DetailAPI.allchap(id);
@@ -25,10 +26,10 @@ const ChapScreen = ({ navigation, route }) => {
       return DetailAPI.chap(href);
     }
   });
-
   useEffect(() => {
     if (data) {
       console.log(getImageDetail(getImage(data[0].img)));
+      console.log(vitri);
     }
   }, [data]);
 
@@ -39,39 +40,43 @@ const ChapScreen = ({ navigation, route }) => {
         data2={data2}
         name={name}
         id={id}
+        vitri={vitri}
         navigation={navigation}
       />
-      <ScrollView contentContainerStyle={{ paddingBottom: 50, zIndex: 1 }}>
-        <View>
-          <Text style={{ fontSize: 20, marginVertical: 10 }}>
-            {name} - {namechap}
-          </Text>
-        </View>
-        <FlatList
-          data={data}
-          keyExtractor={(item) => item.img}
-          renderItem={({ item }) => (
-            <Image
-              key={item.img}
-              style={{
-                width: "100%",
-                aspectRatio: 320 / 455,
-                marginTop: 4,
-                resizeMode: "contain",
-              }}
-              source={{ uri: getImageDetail(getImage(item.img)) }}
-            />
-          )}
-        />
-        {/* {data?.map((item) => (
+      {isLoading ? (
+        <ChapSkeleton />
+      ) : (
+        <ScrollView contentContainerStyle={{ paddingBottom: 50, zIndex: 1 }}>
+          <View>
+            <Text style={{ fontSize: 20, marginVertical: 10 }}>
+              {name} - {namechap}
+            </Text>
+          </View>
+          <FlatList
+            data={data}
+            keyExtractor={(item) => item.img}
+            renderItem={({ item }) => (
+              <Image
+                key={item.img}
+                style={{
+                  width: "100%",
+                  aspectRatio: 320 / 455,
+                  marginTop: 4,
+                  resizeMode: "contain",
+                }}
+                source={{ uri: getImageDetail(getImage(item.img)) }}
+              />
+            )}
+          />
+          {/* {data?.map((item) => (
           <Image
             key={item.img}
             style={{ width: "100%", aspectRatio: 320 / 700, marginTop: 4 }}
             source={{ uri: getImageDetail(getImage(item.img)) }}
           />
         ))} */}
-        {isLoading && <Text>Loading...</Text>}
-      </ScrollView>
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
