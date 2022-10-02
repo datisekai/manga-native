@@ -27,6 +27,8 @@ const HomeScreenDetail = ({ navigation, route }) => {
     }
   });
 
+  console.log(data?.chapters[data.chapters.length - 1]);
+
   return (
     <SafeAreaView
       style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
@@ -123,14 +125,22 @@ const HomeScreenDetail = ({ navigation, route }) => {
               <Button
                 title='Đọc từ đầu'
                 onPress={() =>
-                  navigation.navigate("Chap", { href: data.chapters[0].href, id: href, name:data?.name, namechap: data.chapters[0].name })
+                  navigation.navigate("Chap", {
+                    href: data.chapters[data.chapters.length - 1].href,
+                    id: href,
+                    name: data?.name,
+                    namechap: data.chapters[data.chapters.length - 1].name,
+                  })
                 }
               />
               <Button
                 title='Đọc mới nhất'
                 onPress={() =>
                   navigation.navigate("Chap", {
-                    href: data.chapters[data.chapters.length - 1].href, id: href, name:data?.name, namechap: data.chapters[0].name
+                    href: data.chapters[0].href,
+                    id: href,
+                    name: data?.name,
+                    namechap: data.chapters[0].name,
                   })
                 }
               />
@@ -152,7 +162,12 @@ const HomeScreenDetail = ({ navigation, route }) => {
                 <TouchableOpacity
                   key={item.href}
                   onPress={() =>
-                    navigation.navigate("Chap", { href: item.href, id: href, name:data?.name, namechap: item.name })
+                    navigation.navigate("Chap", {
+                      href: item.href,
+                      id: href,
+                      name: data?.name,
+                      namechap: item.name,
+                    })
                   }
                 >
                   <View
