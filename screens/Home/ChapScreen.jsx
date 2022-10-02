@@ -6,16 +6,20 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useEffect } from "react";
-import CustomHeader from "../../components/CustomHeader";
+import React, { useEffect, useState } from "react";
+import CustomHeader2 from "../../components/CustomHeader2";
 import { useQuery } from "@tanstack/react-query";
-import DetailAPI from "../../actions/detail";
 import { getImage, getImageDetail } from "../../utils";
 import { SafeAreaView } from "react-native-safe-area-context";
+import DetailAPI from "../../actions/detail";
 
 const ChapScreen = ({ navigation, route }) => {
-  const { href } = route.params;
-
+  const { href, id, name, namechap } = route.params;
+  const {data:data2}=useQuery(["allchaps", id], () => {
+    if(id){
+      return DetailAPI.allchap(id);
+    }
+  });
   const { data, isLoading } = useQuery(["chap", href], () => {
     if (href) {
       return DetailAPI.chap(href);
@@ -24,14 +28,18 @@ const ChapScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     if (data) {
-      console.log(getImageDetail(getImage(data[0].img)));
+      console.log(getImageDetail(getImage(data[0].img)));  
     }
+    
   }, [data]);
 
   return (
     <SafeAreaView>
-      <CustomHeader title={"Đọc truyện"} navigation={navigation} />
-      <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
+      <CustomHeader2 namechap={namechap} data2={data2} name={name} id={id} navigation={navigation} />
+      <ScrollView contentContainerStyle={{ paddingBottom: 50, zIndex:1 }}>
+      <View>
+        <Text style={{fontSize: 20,marginVertical: 10 }}>{name} - {namechap}</Text>
+      </View>
         <FlatList
           data={data}
           keyExtractor={(item) => item.img}

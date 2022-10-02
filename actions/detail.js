@@ -9,6 +9,10 @@ const DetailAPI = {
     const result = await axiosClient.get(`/read?slug=${slug}`);
     return result.data.results;
   },
+  allchap: async (slug) => {
+    const result = await axiosClient.get(`/read/chapters?slug=${slug}`);
+    return result.data;
+  },
 };
 
 export default DetailAPI;

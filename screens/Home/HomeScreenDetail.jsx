@@ -123,14 +123,14 @@ const HomeScreenDetail = ({ navigation, route }) => {
               <Button
                 title='Đọc từ đầu'
                 onPress={() =>
-                  navigation.navigate("Chap", { href: data.chapters[0].href })
+                  navigation.navigate("Chap", { href: data.chapters[0].href, id: href, name:data?.name, namechap: data.chapters[0].name })
                 }
               />
               <Button
                 title='Đọc mới nhất'
                 onPress={() =>
                   navigation.navigate("Chap", {
-                    href: data.chapters[data.chapters.length - 1].href,
+                    href: data.chapters[data.chapters.length - 1].href, id: href, name:data?.name, namechap: data.chapters[0].name
                   })
                 }
               />
@@ -152,7 +152,7 @@ const HomeScreenDetail = ({ navigation, route }) => {
                 <TouchableOpacity
                   key={item.href}
                   onPress={() =>
-                    navigation.navigate("Chap", { href: item.href })
+                    navigation.navigate("Chap", { href: item.href, id: href, name:data?.name, namechap: item.name })
                   }
                 >
                   <View
