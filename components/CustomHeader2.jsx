@@ -1,6 +1,13 @@
 import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { FlatList, Text, useColorScheme, View, ScrollView } from "react-native";
+import {
+  FlatList,
+  Text,
+  useColorScheme,
+  View,
+  ScrollView,
+  SafeAreaView,
+} from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import COLORS from "../constants/color";
 
@@ -55,7 +62,7 @@ const CustomHeader2 = ({
             justifyContent: "center",
           }}
         >
-          {vitri == data2.chapters.length - 1 ? (
+          {vitri == data2?.chapters.length - 1 ? (
             <FontAwesome5
               name="angle-left"
               style={{
@@ -117,7 +124,7 @@ const CustomHeader2 = ({
             >
               <View
                 style={{
-                  // width:110,
+                  width: 100,
                   justifyContent: "center",
                 }}
               >
@@ -137,6 +144,7 @@ const CustomHeader2 = ({
             </TouchableOpacity>
           </View>
           {combobox == true ? (
+            // <SafeAreaView>
             <ScrollView
               nestedScrollEnabled
               style={{
@@ -144,7 +152,7 @@ const CustomHeader2 = ({
                 zIndex: 500,
                 height: 305,
                 position: "absolute",
-                top: 45,
+                top: 46,
                 backgroundColor: "white",
                 borderRadius: 5,
                 borderColor: "black",
@@ -178,6 +186,7 @@ const CustomHeader2 = ({
               />
             </ScrollView>
           ) : (
+            // </SafeAreaView>
             ""
           )}
         </View>

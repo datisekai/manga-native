@@ -29,7 +29,6 @@ const ChapScreen = ({ navigation, route }) => {
   useEffect(() => {
     if (data) {
       console.log(getImageDetail(getImage(data[0].img)));
-      console.log(vitri);
     }
   }, [data]);
 
