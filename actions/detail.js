@@ -13,6 +13,12 @@ const DetailAPI = {
     const result = await axiosClient.get(`/read/chapters?slug=${slug}`);
     return result.data;
   },
+  pagination: async (slug, page, limit) => {
+    const result = await axiosClient.get(
+      `/read/pagination?slug=${slug}&page=${page}&limit=${limit}`
+    );
+    return result.data;
+  },
 };
 
 export default DetailAPI;

@@ -130,7 +130,8 @@ const HomeScreenDetail = ({ navigation, route }) => {
                     id: href,
                     name: data?.name,
                     namechap: data.chapters[data.chapters.length - 1].name,
-                    vitri: data.chapters.length - 1,
+                    vitri: (data.chapters.length % 20) - 1,
+                    page: Math.ceil(data.chapters.length / 20),
                   })
                 }
               />
@@ -143,6 +144,7 @@ const HomeScreenDetail = ({ navigation, route }) => {
                     name: data?.name,
                     namechap: data.chapters[0].name,
                     vitri: 0,
+                    page: 1,
                   })
                 }
               />
@@ -169,7 +171,8 @@ const HomeScreenDetail = ({ navigation, route }) => {
                       id: href,
                       name: data?.name,
                       namechap: item.name,
-                      vitri: index,
+                      vitri: index % 20,
+                      page: Math.ceil((index + 1) / 20),
                     })
                   }
                 >
