@@ -13,7 +13,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DetailAPI from "../../actions/detail";
 import CustomHeader from "../../components/CustomHeader";
-import ChapSkeleton from "../../components/Skeleton/ChapSkeleton";
+import AllChapSkeleton from "../../components/Skeleton/AllChapSkeleton";
 
 const ComboBoxScreen = ({ navigation, route }) => {
   const { keycolorhrefchap, href, name, totalPage, page } = route.params;
@@ -64,27 +64,32 @@ const ComboBoxScreen = ({ navigation, route }) => {
     });
     return dataArray;
   }, [data]);
-  console.log(stepNextPage);
   return (
     <SafeAreaView>
       <CustomHeader navigation={navigation} title={"Chọn tập"} />
       {isLoading ? (
-        <ChapSkeleton />
+        <AllChapSkeleton />
       ) : (
         <ScrollView
           contentContainerStyle={{
             paddingTop: 10,
           }}
         >
-          <Button title={"load"} onPress={fetchPreviousPage} />
-
+          {stepBackPage > 1 ? (
+            <Button
+              title={"Xem thêm các tập mới"}
+              onPress={fetchPreviousPage}
+            />
+          ) : (
+            ""
+          )}
           {isFetchingPreviousPage && <Text>Loading....</Text>}
           <FlatList
             data={dataSection}
             numColumns={2}
-            // style={{ minHeight: Dimensions.get("window").height }}
-            onStartReached={stepNextPage >= 1 ? fetchPreviousPage : ""}
-            onEndReached={stepNextPage >= totalPage ? fetchNextPage : ""}
+            style={{ minHeight: 300 }}
+            // onStartReached={stepBackPage > 1 ? fetchPreviousPage : ""}
+            // onEndReached={stepNextPage < totalPage ? fetchNextPage : ""}
             renderItem={({ item, index }) => {
               return (
                 <TouchableOpacity
@@ -126,9 +131,13 @@ const ComboBoxScreen = ({ navigation, route }) => {
             keyExtractor={(item) => item.href}
           />
           {isFetchingNextPage && <Text>Loading....</Text>}
-          <Button title={"them"} onPress={fetchNextPage} />
+          {stepNextPage < totalPage ? (
+            <Button title={"Xem thêm các tập cũ"} onPress={fetchNextPage} />
+          ) : (
+            ""
+          )}
 
-          <View style={{ marginBottom: 100 }}></View>
+          <View style={{ marginBottom: 50 }}></View>
         </ScrollView>
       )}
     </SafeAreaView>
