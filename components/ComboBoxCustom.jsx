@@ -28,6 +28,7 @@ const ComboBoxCustom = ({
           marginHorizontal: 100,
           flexDirection: "row",
           justifyContent: "space-around",
+          marginVertical: 20,
         }}
       >
         <View
@@ -38,7 +39,7 @@ const ComboBoxCustom = ({
           {vitri === dataAllChaps?.chapters.length - 1 &&
           page === dataAllChaps?.totalPage ? (
             <FontAwesome5
-              name='angle-left'
+              name="angle-left"
               style={{
                 fontSize: 30,
                 backgroundColor: "#d0c3c2",
@@ -50,7 +51,7 @@ const ComboBoxCustom = ({
             />
           ) : (
             <FontAwesome5
-              name='angle-left'
+              name="angle-left"
               onPress={() =>
                 navigation.navigate("Chap", {
                   href:
@@ -124,7 +125,7 @@ const ComboBoxCustom = ({
                   justifyContent: "center",
                 }}
               >
-                <FontAwesome5 name='chevron-down' />
+                <FontAwesome5 name="chevron-down" />
               </View>
             </TouchableOpacity>
           </View>
@@ -136,7 +137,7 @@ const ComboBoxCustom = ({
         >
           {vitri === 0 && page === 1 ? (
             <FontAwesome5
-              name='angle-right'
+              name="angle-right"
               style={{
                 fontSize: 30,
                 backgroundColor: "#d0c3c2",
@@ -148,7 +149,7 @@ const ComboBoxCustom = ({
             />
           ) : (
             <FontAwesome5
-              name='angle-right'
+              name="angle-right"
               onPress={() =>
                 navigation.navigate("Chap", {
                   href:
