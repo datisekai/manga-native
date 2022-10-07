@@ -1,12 +1,13 @@
 import { TextInput } from "@react-native-material/core";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { LogBox, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SearchAPI from "../../actions/search";
 import Section2 from "../../components/Sections/Section2";
 import useDebounce from "../../hooks/useDebounce";
 import HeaderSearch from "./HeaderSearch";
+import { ScrollView } from "react-native-virtualized-view";
 
 const SearchScreen = ({ navigation }) => {
   const [search, setSearch] = useState("");
@@ -22,6 +23,10 @@ const SearchScreen = ({ navigation }) => {
     }
   });
 
+  useEffect(() => {
+    LogBox.ignoreLogs(["Query data cannot be undefined"]);
+  }, []);
+
   return (
     <SafeAreaView>
       {/* <CustomHeader title={"Tìm kiếm"} navigation={navigation} isHome={true} /> */}
@@ -32,7 +37,7 @@ const SearchScreen = ({ navigation }) => {
             Kết quả với từ khóa &quot;{debounceSearch}&quot;
           </Text>
         )}
-        <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
+        <ScrollView contentContainerStyle={{ paddingBottom: 200 }}>
           <Section2
             data={data?.data || []}
             navigation={navigation}

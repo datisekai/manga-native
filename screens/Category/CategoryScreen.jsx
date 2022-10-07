@@ -17,8 +17,8 @@ const CategoryScreen = ({ navigation }) => {
           <Button
             key={item.id}
             onPress={() =>
-              navigation.navigate("searchs", {
-                screen: "SearchCategory",
+              navigation.navigate("categories", {
+                screen: "searchCategory",
                 params: { ...item },
               })
             }

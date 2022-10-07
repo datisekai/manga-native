@@ -2,24 +2,21 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
+import { ThemeProvider } from "@rneui/themed";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as React from "react";
 import { Button, Text, useColorScheme, View } from "react-native";
 import "react-native-gesture-handler";
+import { Provider } from "react-redux";
 import CustomDrawerContent from "./components/CustomDrawerContent";
 import COLORS from "./constants/color";
+import { store } from "./redux";
+import CategoryStack from "./screens/Category/CategoryStack";
 import HistoryScreen from "./screens/History/HistoryScreen";
 import HomeStack from "./screens/Home/HomeStack";
-import SettingStack from "./screens/Setting/SettingStack";
-import { navOptionHandler } from "./utils";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import HotScreen from "./screens/Hot/HotScreen";
-import CategoryScreen from "./screens/Category/CategoryScreen";
-import LoginScreen from "./screens/Authorization/LoginScreen";
-import FollowScreen from "./screens/Follow/FollowScreen";
-import SearchScreen from "./screens/Search/SearchScreen";
-import { ThemeProvider } from "@rneui/themed";
 import SearchStack from "./screens/Search/SearchStack";
+import { navOptionHandler } from "./utils";
 
 const Tab = createBottomTabNavigator();
 
@@ -95,7 +92,7 @@ function TabNavigator() {
         name='Histories'
         component={HistoryScreen}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         options={{
           ...navOptionHandler(),
           tabBarIcon: ({ focused }) => (
@@ -124,7 +121,7 @@ function TabNavigator() {
         }}
         name='Settings'
         component={SettingStack}
-      />
+      /> */}
     </Tab.Navigator>
   );
 }
@@ -137,49 +134,51 @@ export default function App() {
   return (
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
-        <NavigationContainer>
-          <Drawer.Navigator
-            drawerContent={(props) => <CustomDrawerContent {...props} />}
-            initialRouteName='MenuTab'
-          >
-            <Drawer.Screen
-              name='HomeMain'
-              options={{ ...navOptionHandler(), title: "Trang chủ" }}
-              component={TabNavigator}
-            />
-            <Drawer.Screen
-              name='searchs'
-              options={{ ...navOptionHandler(), title: "Tìm kiếm" }}
-              component={SearchStack}
-            />
+        <Provider store={store}>
+          <NavigationContainer>
+            <Drawer.Navigator
+              drawerContent={(props) => <CustomDrawerContent {...props} />}
+              initialRouteName='MenuTab'
+            >
+              <Drawer.Screen
+                name='HomeMain'
+                options={{ ...navOptionHandler(), title: "Trang chủ" }}
+                component={TabNavigator}
+              />
+              <Drawer.Screen
+                name='searchs'
+                options={{ ...navOptionHandler(), title: "Tìm kiếm" }}
+                component={SearchStack}
+              />
 
-            <Drawer.Screen
-              name='hots'
-              options={{ ...navOptionHandler(), title: "Hot" }}
-              component={HotScreen}
-            />
-            {/* <Drawer.Screen
+              <Drawer.Screen
+                name='hots'
+                options={{ ...navOptionHandler(), title: "Hot" }}
+                component={HotScreen}
+              />
+              {/* <Drawer.Screen
               name='follows'
               options={{ ...navOptionHandler(), title: "Theo dõi" }}
               component={FollowScreen}
             /> */}
-            <Drawer.Screen
-              name='histories'
-              options={{ ...navOptionHandler(), title: "Lịch sử" }}
-              component={HistoryScreen}
-            />
-            <Drawer.Screen
-              name='categories'
-              options={{ ...navOptionHandler(), title: "Thể loại" }}
-              component={CategoryScreen}
-            />
-            {/* <Drawer.Screen
+              <Drawer.Screen
+                name='histories'
+                options={{ ...navOptionHandler(), title: "Lịch sử" }}
+                component={HistoryScreen}
+              />
+              <Drawer.Screen
+                name='categories'
+                options={{ ...navOptionHandler(), title: "Thể loại" }}
+                component={CategoryStack}
+              />
+              {/* <Drawer.Screen
               name='logín'
               options={{ ...navOptionHandler(), title: "Đăng nhập" }}
               component={LoginScreen}
             /> */}
-          </Drawer.Navigator>
-        </NavigationContainer>
+            </Drawer.Navigator>
+          </NavigationContainer>
+        </Provider>
       </QueryClientProvider>
     </ThemeProvider>
   );

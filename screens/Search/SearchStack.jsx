@@ -14,11 +14,11 @@ const SearchStack = () => {
         name='Search'
         component={SearchScreen}
       />
-      <StackHome.Screen
+      {/* <StackHome.Screen
         name='SearchCategory'
         options={{ ...navOptionHandler() }}
         component={SearchCategory}
-      />
+      /> */}
     </StackHome.Navigator>
   );
 };

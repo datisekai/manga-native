@@ -12,7 +12,7 @@ const CustomDrawerContent = (props) => {
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
-      <DrawerItem label={"Chế độ tối"} icon={() => <Switch />} />
+      {/* <DrawerItem label={"Chế độ tối"} icon={() => <Switch />} /> */}
     </DrawerContentScrollView>
   );
 };

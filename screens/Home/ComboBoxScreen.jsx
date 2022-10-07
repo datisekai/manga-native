@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView } from "react-native-virtualized-view";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DetailAPI from "../../actions/detail";
 import CustomHeader from "../../components/CustomHeader";
@@ -87,7 +87,7 @@ const ComboBoxScreen = ({ navigation, route }) => {
           <FlatList
             data={dataSection}
             numColumns={2}
-            style={{ minHeight: 300 }}
+            style={{ minHeight: 300, marginTop: 16 }}
             // onStartReached={stepBackPage > 1 ? fetchPreviousPage : ""}
             // onEndReached={stepNextPage < totalPage ? fetchNextPage : ""}
             renderItem={({ item, index }) => {
@@ -128,11 +128,15 @@ const ComboBoxScreen = ({ navigation, route }) => {
                 </TouchableOpacity>
               );
             }}
-            keyExtractor={(item) => item.href}
+            keyExtractor={(item, index) => index}
           />
           {isFetchingNextPage && <Text>Loading....</Text>}
           {stepNextPage < totalPage ? (
-            <Button title={"Xem thêm các tập cũ"} onPress={fetchNextPage} />
+            <Button
+              title={"Xem thêm các tập cũ"}
+              onPress={fetchNextPage}
+              style={{ marginBottom: 20 }}
+            />
           ) : (
             ""
           )}

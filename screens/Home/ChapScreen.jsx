@@ -1,28 +1,29 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect } from "react";
-import {
-  FlatList,
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-} from "react-native";
+import { Dimensions, FlatList, Image, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { ScrollView } from "react-native-virtualized-view";
+import { useDispatch, useSelector } from "react-redux";
 import DetailAPI from "../../actions/detail";
-import CustomHeader from "../../components/CustomHeader";
-import { getImage, getImageDetail } from "../../utils";
-import ChapSkeleton from "../../components/Skeleton/ChapSkeleton";
-import { FontAwesome5 } from "@expo/vector-icons";
-import Headerchitiettruyenc from "../../components/Headerchitiettruyenc";
 import ComboBoxCustom from "../../components/ComboBoxCustom";
+import CustomHeader from "../../components/CustomHeader";
+import Headerchitiettruyenc from "../../components/Headerchitiettruyenc";
+import ChapSkeleton from "../../components/Skeleton/ChapSkeleton";
+import { setChapter } from "../../redux/slices/history";
+import { getImage, getImageDetail } from "../../utils";
+import AutoHeightImage from "react-native-auto-height-image";
+
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 const ChapScreen = ({ navigation, route }) => {
   //id là href để gọi all chap
   //href là href để gọi chap
   //tên truyện: name
   //tên chap: namechap
+  const { chapters, comics } = useSelector((state) => state.history);
+
   const { href, id, name, namechap, vitri, page } = route.params;
   const limit = 20;
   const { data: dataAllChaps } = useQuery(["allchaps", id, page], () => {
@@ -51,6 +52,27 @@ const ChapScreen = ({ navigation, route }) => {
       return DetailAPI.chap(href);
     }
   });
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const handleStorage = async () => {
+      const isExist = chapters?.some((item) => item === id);
+      if (!isExist) {
+        const arrayTest = [...chapters, href];
+        await AsyncStorage.setItem(
+          "history",
+          JSON.stringify({ comics, chapters: [...chapters, href] })
+        );
+
+        dispatch(setChapter(arrayTest));
+      }
+    };
+
+    if (href) {
+      handleStorage();
+    }
+  }, [href]);
   return (
     <SafeAreaView>
       <CustomHeader navigation={navigation} title={"Chi tiết truyện"} />
@@ -60,7 +82,7 @@ const ChapScreen = ({ navigation, route }) => {
         <ScrollView contentContainerStyle={{ paddingBottom: 50, zIndex: 1 }}>
           <FlatList
             data={data}
-            keyExtractor={(item) => item.img}
+            keyExtractor={(item, index) => index}
             ListHeaderComponent={
               <>
                 <Headerchitiettruyenc name={name} namechap={namechap} />
@@ -93,15 +115,19 @@ const ChapScreen = ({ navigation, route }) => {
               />
             }
             renderItem={({ item }) => (
-              <Image
-                key={item.img}
-                style={{
-                  width: "100%",
-                  aspectRatio: 320 / 455,
-                  marginBottom: 4,
-                  resizeMode: "contain",
-                }}
+              // <Image
+              //   key={item.img}
+              //   style={{
+              //     width: "100%",
+              //     aspectRatio: 320 / 455,
+              //     marginBottom: 4,
+              //     resizeMode: "contain",
+              //   }}
+              //   source={{ uri: getImageDetail(getImage(item.img)) }}
+              // />
+              <AutoHeightImage
                 source={{ uri: getImageDetail(getImage(item.img)) }}
+                width={windowWidth}
               />
             )}
           />

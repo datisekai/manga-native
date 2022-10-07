@@ -1,14 +1,15 @@
 import {
+  Dimensions,
   FlatList,
   Image,
-  ScrollView,
+  LogBox,
   StyleSheet,
   Text,
   TouchableHighlight,
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import CustomHeader from "../../components/CustomHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "@tanstack/react-query";
@@ -17,9 +18,22 @@ import { getImage } from "../../utils";
 import { AntDesign } from "@expo/vector-icons";
 import { Button, Stack } from "@react-native-material/core";
 import DetailSkeleton from "../../components/Skeleton/DetailSkeleton";
+import { ScrollView } from "react-native-virtualized-view";
+import { useDispatch, useSelector } from "react-redux";
+import { addComic, setComic } from "../../redux/slices/history";
+
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 const HomeScreenDetail = ({ navigation, route }) => {
   const { href, name } = route.params;
+  const [page, setPage] = useState(1);
+  const [dataRender, setDataRender] = useState([]);
+  const limit = 30;
+
+  const { chapters, comics } = useSelector((state) => state.history);
+
+  const dispatch = useDispatch();
 
   const { data, isLoading } = useQuery(["detail", href], () => {
     if (href) {
@@ -27,7 +41,52 @@ const HomeScreenDetail = ({ navigation, route }) => {
     }
   });
 
-  console.log(data?.chapters[data.chapters.length - 1]);
+  useEffect(() => {
+    LogBox.ignoreAllLogs(true);
+  }, [data]);
+
+  useEffect(() => {
+    const handleStorage = async () => {
+      if (data) {
+        const isExist = comics.some((item) => item.href === href);
+        if (!isExist) {
+          dispatch(
+            setComic([
+              ...comics,
+              { name: data.name, href: href, img: data.img },
+            ])
+          );
+          await AsyncStorage.setItem(
+            "history",
+            JSON.stringify({
+              chapters,
+              comics: [
+                ...comics,
+                { name: data.name, href: href, img: data.img },
+              ],
+            })
+          );
+        }
+      }
+    };
+
+    handleStorage();
+  }, [data]);
+
+  useEffect(() => {
+    if (data) {
+      const start = (page - 1) * limit;
+      const end = page * limit;
+      const dataChapterNew = data.chapters.slice(start, end);
+      setDataRender([...dataRender, ...dataChapterNew]);
+    }
+  }, [page, data]);
+
+  const handleLoadMore = () => {
+    if (page * limit < data.chapters.length) {
+      setPage(page + 1);
+    }
+  };
 
   return (
     <SafeAreaView
@@ -38,7 +97,9 @@ const HomeScreenDetail = ({ navigation, route }) => {
         {isLoading ? (
           <DetailSkeleton />
         ) : (
-          <ScrollView contentContainerStyle={{ paddingHorizontal: 8 }}>
+          <ScrollView
+            contentContainerStyle={{ paddingHorizontal: 8, width: windowWidth }}
+          >
             <Text style={{ marginTop: 8, textAlign: "center", fontSize: 18 }}>
               {data?.name}
             </Text>
@@ -64,6 +125,7 @@ const HomeScreenDetail = ({ navigation, route }) => {
                   style={{
                     flexDirection: "row",
                     justifyContent: "space-between",
+                    width: windowWidth,
                   }}
                 >
                   <View
@@ -75,7 +137,7 @@ const HomeScreenDetail = ({ navigation, route }) => {
                       marginTop: 20,
                     }}
                   >
-                    <AntDesign name="wifi" style={{ fontSize: 20 }} />
+                    <AntDesign name='wifi' style={{ fontSize: 20 }} />
                     <Text style={{ fontSize: 15, marginLeft: 4 }}>
                       {data?.status}
                     </Text>
@@ -89,16 +151,16 @@ const HomeScreenDetail = ({ navigation, route }) => {
                       justifyContent: "center",
                     }}
                   >
-                    <AntDesign name="user" style={{ fontSize: 20 }} />
+                    <AntDesign name='user' style={{ fontSize: 20 }} />
                     <Text style={{ fontSize: 15, marginLeft: 4 }}>
                       {data?.author ? data.author : "Đang cập nhật"}
                     </Text>
                   </View>
                 </View>
                 <Stack
-                  direction="row"
+                  direction='row'
                   divider={8}
-                  wrap="wrap"
+                  wrap='wrap'
                   style={{ marginTop: 8 }}
                 >
                   {data?.categories?.map((item) => (
@@ -123,7 +185,7 @@ const HomeScreenDetail = ({ navigation, route }) => {
               }}
             >
               <Button
-                title="Đọc từ đầu"
+                title='Đọc từ đầu'
                 onPress={() =>
                   navigation.navigate("Chap", {
                     href: data.chapters[data.chapters.length - 1].href,
@@ -136,7 +198,7 @@ const HomeScreenDetail = ({ navigation, route }) => {
                 }
               />
               <Button
-                title="Đọc mới nhất"
+                title='Đọc mới nhất'
                 onPress={() =>
                   navigation.navigate("Chap", {
                     href: data.chapters[0].href,
@@ -160,37 +222,47 @@ const HomeScreenDetail = ({ navigation, route }) => {
               Danh sách chương
             </Text>
             <FlatList
-              data={data?.chapters}
+              data={dataRender}
               style={{ minHeight: 300 }}
-              renderItem={({ item, index }) => (
-                <TouchableOpacity
-                  key={item.href}
-                  onPress={() =>
-                    navigation.navigate("Chap", {
-                      href: item.href,
-                      id: href,
-                      name: data?.name,
-                      namechap: item.name,
-                      vitri: index % 20,
-                      page: Math.ceil((index + 1) / 20),
-                    })
-                  }
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      paddingVertical: 6,
-                    }}
+              onEndReached={handleLoadMore}
+              onEndReachedThreshold={0.05}
+              renderItem={({ item, index }) => {
+                const isExist = chapters.some((element) => {
+                  return element == item.href;
+                });
+
+                return (
+                  <TouchableOpacity
+                    key={item.href}
+                    onPress={() =>
+                      navigation.navigate("Chap", {
+                        href: item.href,
+                        id: href,
+                        name: data?.name,
+                        namechap: item.name,
+                        vitri: index % 20,
+                        page: Math.ceil((index + 1) / 20),
+                      })
+                    }
                   >
-                    <Text>{item.name}</Text>
-                    <Text>{item.time}</Text>
-                  </View>
-                </TouchableOpacity>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        paddingVertical: 6,
+                      }}
+                    >
+                      <Text style={{ color: isExist ? "#ccc" : "#000" }}>
+                        {item.name}
+                      </Text>
+                      <Text>{item.time}</Text>
+                    </View>
+                  </TouchableOpacity>
+                );
                 // <Text>{item.name}</Text>
-              )}
-              keyExtractor={(item) => item.href}
+              }}
+              keyExtractor={(item, index) => index}
               ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
             />
           </ScrollView>

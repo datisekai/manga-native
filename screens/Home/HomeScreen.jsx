@@ -1,13 +1,15 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import CustomHeader from "../../components/CustomHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "@tanstack/react-query";
 import HomeAPI from "../../actions/home";
 import Section1 from "../../components/Sections/Section1";
 import Section2 from "../../components/Sections/Section2";
-import { ScrollView } from "react-native-gesture-handler";
-
+import { ScrollView } from "react-native-virtualized-view";
+import { useDispatch } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { setHistory } from "../../redux/slices/history";
 const HomeScreen = ({ navigation }) => {
   const { data: dataBanner, isLoading: isLoadingBanner } = useQuery(
     ["banner"],
@@ -17,6 +19,22 @@ const HomeScreen = ({ navigation }) => {
     ["upcoming"],
     HomeAPI.home
   );
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const getStorage = async () => {
+      const storage = await AsyncStorage.getItem("history");
+      if (storage) {
+        dispatch(setHistory(JSON.parse(storage)));
+      } else {
+        dispatch(setHistory({ chapters: [], comics: [] }));
+      }
+    };
+
+    getStorage();
+  }, []);
+
   return (
     <SafeAreaView
       style={{

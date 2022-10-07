@@ -7,14 +7,23 @@ import {
   useColorScheme,
   View,
 } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import COLORS from "../../constants/color";
 import { getImage } from "../../utils";
 
-const CardHome = ({ href, img, name, newChapters, navigation }) => {
+const CardHistory = ({ href, img, name, navigation }) => {
   const colorScheme = useColorScheme();
 
   const { chapters, comics } = useSelector((state) => state.history);
+
+  const dispatch = useDispatch();
+
+  const handlePress = async () => {
+    navigation.navigate("HomeDetail", {
+      href: href,
+      name: name,
+    });
+  };
 
   return (
     <View
@@ -22,14 +31,7 @@ const CardHome = ({ href, img, name, newChapters, navigation }) => {
         ...styles.container,
       }}
     >
-      <TouchableOpacity
-        onPress={() =>
-          navigation.navigate("HomeDetail", {
-            href: href,
-            name: name,
-          })
-        }
-      >
+      <TouchableOpacity onPress={handlePress}>
         <ImageBackground
           style={styles.image}
           source={{ uri: getImage(img) }}
@@ -50,43 +52,11 @@ const CardHome = ({ href, img, name, newChapters, navigation }) => {
           {name}
         </Text>
       </TouchableOpacity>
-      <View style={styles.listChapter}>
-        {newChapters?.map((item, index) => {
-          const isExist = chapters.some((element) => element === item.href);
-
-          return (
-            <TouchableOpacity
-              key={item.name}
-              onPress={() =>
-                navigation.navigate("Chap", {
-                  href: item.href,
-                  id: href,
-                  name,
-                  namechap: item.name,
-                  vitri: index % 20,
-                  page: Math.ceil((index + 1) / 20),
-                })
-              }
-            >
-              <View style={styles.chapter} key={item.href}>
-                <Text
-                  style={{ color: isExist ? "#ccc" : COLORS[colorScheme].text }}
-                >
-                  {item.name}
-                </Text>
-                <Text style={{ color: COLORS[colorScheme].text }}>
-                  {item.time}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
     </View>
   );
 };
 
-export default CardHome;
+export default CardHistory;
 
 const styles = StyleSheet.create({
   image: {

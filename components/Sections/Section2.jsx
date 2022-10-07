@@ -1,13 +1,13 @@
+import React, { useEffect } from "react";
 import {
   FlatList,
-  ScrollView,
+  LogBox,
   StyleSheet,
   Text,
-  TouchableOpacity,
   useColorScheme,
   View,
 } from "react-native";
-import React, { FC } from "react";
+import { ScrollView } from "react-native-virtualized-view";
 import COLORS from "../../constants/color";
 import CardHome from "../Card/CardHome";
 import CardHomeSkeleton from "../Skeleton/CardHomeSkeleton";
@@ -23,11 +23,34 @@ const Section2 = ({ data, label, navigation, isLoading }) => {
       )}
 
       <ScrollView contentContainerStyle={styles.list}>
-        {!isLoading
-          ? data.map((item) => (
-              <CardHome {...item} key={item.href} navigation={navigation} />
-            ))
-          : [1, 2, 3, 4].map((item) => <CardHomeSkeleton key={item} />)}
+        {!isLoading ? (
+          <FlatList
+            data={data}
+            keyExtractor={(item, index) => index}
+            numColumns={2}
+            renderItem={({ item, index }) => (
+              <CardHome
+                {...item}
+                index={index}
+                key={item.href}
+                navigation={navigation}
+              />
+            )}
+            ItemSeparatorComponent={() => (
+              <View style={{ width: 8, height: 8 }} />
+            )}
+          />
+        ) : (
+          <FlatList
+            data={[1, 2, 3, 4]}
+            keyExtractor={(item, index) => index}
+            numColumns={2}
+            renderItem={({ item, index }) => <CardHomeSkeleton />}
+            ItemSeparatorComponent={() => (
+              <View style={{ width: 8, height: 8 }} />
+            )}
+          />
+        )}
       </ScrollView>
     </View>
   );
@@ -45,9 +68,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   list: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-around",
+    justifyContent: "center",
     alignItems: "center",
   },
 });
