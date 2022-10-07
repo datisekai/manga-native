@@ -17,6 +17,7 @@ import AllChapSkeleton from "../../components/Skeleton/AllChapSkeleton";
 
 const ComboBoxScreen = ({ navigation, route }) => {
   const { keycolorhrefchap, href, name, totalPage, page } = route.params;
+  const [pageRoot, setPageRoot] = useState(1);
   const [stepNextPage, setStepNextPage] = useState(page);
   const [stepBackPage, setStepBackPage] = useState(page);
   const limit = 20;
@@ -24,6 +25,7 @@ const ComboBoxScreen = ({ navigation, route }) => {
     useInfiniteQuery(
       ["allchap", href, page],
       ({ pageParam = page }) => {
+        setPageRoot(pageRoot + 1);
         setStepBackPage(pageParam);
         if ((href, pageParam)) {
           return DetailAPI.pagination(href, pageParam, limit);
@@ -102,11 +104,11 @@ const ComboBoxScreen = ({ navigation, route }) => {
                       namechap: item.name,
                       vitri: index % 20,
                       page:
-                        Math.ceil((index + 1) / 20) > page
-                          ? page + (Math.ceil((index + 1) / 20) - page)
-                          : Math.ceil((index + 1) / 20) < page
-                          ? page - (page - Math.ceil((index + 1) / 20))
-                          : Math.ceil((index + 1) / 20) < page
+                        Math.ceil((index + 1) / 20) > pageRoot
+                          ? page + (Math.ceil((index + 1) / 20) - pageRoot)
+                          : Math.ceil((index + 1) / 20) < pageRoot
+                          ? page - (pageRoot - Math.ceil((index + 1) / 20))
+                          : Math.ceil((index + 1) / 20) < pageRoot
                           ? page
                           : "",
                     })
