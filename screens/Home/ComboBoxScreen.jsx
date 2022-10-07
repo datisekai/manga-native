@@ -17,8 +17,8 @@ import AllChapSkeleton from "../../components/Skeleton/AllChapSkeleton";
 
 const ComboBoxScreen = ({ navigation, route }) => {
   const { keycolorhrefchap, href, name, totalPage, page } = route.params;
-  const [stepNextPage, setStepNextPage] = useState(1);
-  const [stepBackPage, setStepBackPage] = useState(totalPage);
+  const [stepNextPage, setStepNextPage] = useState(page);
+  const [stepBackPage, setStepBackPage] = useState(page);
   const limit = 20;
   const { data, isLoading, fetchPreviousPage, isFetchingPreviousPage } =
     useInfiniteQuery(

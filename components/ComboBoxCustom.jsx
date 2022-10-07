@@ -22,12 +22,14 @@ const ComboBoxCustom = ({
   // console.log(namechap);
 
   return (
-    <>
+    <SafeAreaView
+      style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+    >
       <View
         style={{
-          marginHorizontal: 100,
           flexDirection: "row",
           justifyContent: "space-around",
+          width: 200,
           marginVertical: 20,
         }}
       >
@@ -178,7 +180,7 @@ const ComboBoxCustom = ({
           )}
         </View>
       </View>
-    </>
+    </SafeAreaView>
   );
 };
 
