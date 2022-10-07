@@ -59,6 +59,13 @@ const ChapSkeleton = () => {
           animation="wave"
         />
       </View>
+      <View style={{ marginTop: 40, alignItems: "center" }}>
+        <Skeleton
+          width={Dimensions.get("window").width - 10}
+          height={400}
+          animation="wave"
+        />
+      </View>
     </View>
   );
 };

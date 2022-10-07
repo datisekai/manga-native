@@ -101,7 +101,14 @@ const ComboBoxScreen = ({ navigation, route }) => {
                       name: name,
                       namechap: item.name,
                       vitri: index % 20,
-                      page: Math.ceil((index + 1) / 20),
+                      page:
+                        Math.ceil((index + 1) / 20) > page
+                          ? page + (Math.ceil((index + 1) / 20) - page)
+                          : Math.ceil((index + 1) / 20) < page
+                          ? page - (page - Math.ceil((index + 1) / 20))
+                          : Math.ceil((index + 1) / 20) < page
+                          ? page
+                          : "",
                     })
                   }
                 >
