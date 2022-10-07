@@ -25,9 +25,10 @@ const AllChapSkeleton = () => {
           {arr.map((item) => {
             return (
               <Skeleton
+                key={item}
                 style={{ marginBottom: 10 }}
                 height={70}
-                animation="wave"
+                animation='wave'
               />
             );
           })}
@@ -45,7 +46,7 @@ const AllChapSkeleton = () => {
               <Skeleton
                 style={{ marginBottom: 10 }}
                 height={70}
-                animation="wave"
+                animation='wave'
               />
             );
           })}

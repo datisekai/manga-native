@@ -28,6 +28,7 @@ const Section2 = ({ data, label, navigation, isLoading }) => {
             data={data}
             keyExtractor={(item, index) => index}
             numColumns={2}
+            style={{ paddingBottom: 50 }}
             renderItem={({ item, index }) => (
               <CardHome
                 {...item}
