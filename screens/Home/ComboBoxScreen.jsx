@@ -18,7 +18,7 @@ import { useSelector } from "react-redux";
 
 const ComboBoxScreen = ({ navigation, route }) => {
   const { keycolorhrefchap, href, name, totalPage, page } = route.params;
-  const [pageRoot, setPageRoot] = useState(1);
+  const [pageRoot, setPageRoot] = useState(0);
   const [stepNextPage, setStepNextPage] = useState(page);
   const [stepBackPage, setStepBackPage] = useState(page);
   const limit = 20;
@@ -67,7 +67,6 @@ const ComboBoxScreen = ({ navigation, route }) => {
     });
     return dataArray;
   }, [data]);
-
   const { chapters } = useSelector((state) => state.history);
 
   return (
@@ -113,9 +112,9 @@ const ComboBoxScreen = ({ navigation, route }) => {
                           ? page + (Math.ceil((index + 1) / 20) - pageRoot)
                           : Math.ceil((index + 1) / 20) < pageRoot
                           ? page - (pageRoot - Math.ceil((index + 1) / 20))
-                          : Math.ceil((index + 1) / 20) < pageRoot
+                          : Math.ceil((index + 1) / 20) == pageRoot
                           ? page
-                          : "",
+                          : page,
                     })
                   }
                 >
