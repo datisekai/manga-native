@@ -14,7 +14,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import DetailAPI from "../../actions/detail";
 import CustomHeader from "../../components/CustomHeader";
 import AllChapSkeleton from "../../components/Skeleton/AllChapSkeleton";
-import { useSelector } from "react-redux";
 
 const ComboBoxScreen = ({ navigation, route }) => {
   const { keycolorhrefchap, href, name, totalPage, page } = route.params;
@@ -67,9 +66,6 @@ const ComboBoxScreen = ({ navigation, route }) => {
     });
     return dataArray;
   }, [data]);
-
-  const { chapters } = useSelector((state) => state.history);
-
   return (
     <SafeAreaView>
       <CustomHeader navigation={navigation} title={"Chọn tập"} />
@@ -97,7 +93,6 @@ const ComboBoxScreen = ({ navigation, route }) => {
             // onStartReached={stepBackPage > 1 ? fetchPreviousPage : ""}
             // onEndReached={stepNextPage < totalPage ? fetchNextPage : ""}
             renderItem={({ item, index }) => {
-              const isExist = chapters.some((element) => element === item.href);
               return (
                 <TouchableOpacity
                   key={item.href}
@@ -133,12 +128,7 @@ const ComboBoxScreen = ({ navigation, route }) => {
                   >
                     <Text
                       style={{
-                        color:
-                          keycolorhrefchap === item.href
-                            ? "red"
-                            : isExist
-                            ? "#ccc"
-                            : "#000",
+                        color: keycolorhrefchap === item.href ? "red" : "black",
                       }}
                     >
                       {item.name}

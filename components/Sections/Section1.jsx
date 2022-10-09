@@ -1,6 +1,5 @@
 import React, { FC } from "react";
 import {
-  Dimensions,
   FlatList,
   StyleSheet,
   Text,
@@ -11,9 +10,6 @@ import {
 import COLORS from "../../constants/color";
 import CardBanner from "../Card/CardBanner";
 import CardBannerSkeleton from "../Skeleton/CardBannerSkeleton";
-
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
 
 const Section1 = ({ data, label, navigation, isLoading }) => {
   const colorScheme = useColorScheme();
@@ -68,6 +64,5 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 16,
     flex: 1,
-    width: windowWidth,
   },
 });

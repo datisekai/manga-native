@@ -73,8 +73,6 @@ const ChapScreen = ({ navigation, route }) => {
       handleStorage();
     }
   }, [href]);
-
-  console.log(data);
   return (
     <SafeAreaView>
       <CustomHeader navigation={navigation} title={"Chi tiết truyện"} />
