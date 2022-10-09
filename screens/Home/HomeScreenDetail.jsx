@@ -1,3 +1,7 @@
+import { AntDesign } from "@expo/vector-icons";
+import { Button, Stack } from "@react-native-material/core";
+import { useQuery } from "@tanstack/react-query";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -5,22 +9,17 @@ import {
   LogBox,
   StyleSheet,
   Text,
-  TouchableHighlight,
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useMemo, useState } from "react";
-import CustomHeader from "../../components/CustomHeader";
+import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useQuery } from "@tanstack/react-query";
-import DetailAPI from "../../actions/detail";
-import { getImage } from "../../utils";
-import { AntDesign } from "@expo/vector-icons";
-import { Button, Stack } from "@react-native-material/core";
-import DetailSkeleton from "../../components/Skeleton/DetailSkeleton";
-import { ScrollView } from "react-native-virtualized-view";
 import { useDispatch, useSelector } from "react-redux";
-import { addComic, setComic } from "../../redux/slices/history";
+import DetailAPI from "../../actions/detail";
+import CustomHeader from "../../components/CustomHeader";
+import DetailSkeleton from "../../components/Skeleton/DetailSkeleton";
+import { setComic } from "../../redux/slices/history";
+import { getImage } from "../../utils";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -29,7 +28,9 @@ const HomeScreenDetail = ({ navigation, route }) => {
   const { href, name } = route.params;
   const [page, setPage] = useState(1);
   const [dataRender, setDataRender] = useState([]);
-  const limit = 30;
+  const limit = 10;
+
+  const flatRef = useRef();
 
   const { chapters, comics } = useSelector((state) => state.history);
 
@@ -78,13 +79,29 @@ const HomeScreenDetail = ({ navigation, route }) => {
       const start = (page - 1) * limit;
       const end = page * limit;
       const dataChapterNew = data.chapters.slice(start, end);
-      setDataRender([...dataRender, ...dataChapterNew]);
+      setDataRender(dataChapterNew);
     }
-  }, [page, data]);
+  }, [data]);
 
-  const handleLoadMore = () => {
+  const handleNextMore = () => {
     if (page * limit < data.chapters.length) {
+      const start = page * limit;
+      const end = (page + 1) * limit;
+      const dataChapterNew = data.chapters.slice(start, end);
+      setDataRender(dataChapterNew);
       setPage(page + 1);
+      flatRef.current.scrollToIndex({ animated: true, index: 0 });
+    }
+  };
+
+  const handlePreMore = () => {
+    if (page > 1) {
+      const start = (page - 1 - 1) * limit;
+      const end = (page - 1) * limit;
+      const dataChapterNew = data.chapters.slice(start, end);
+      setDataRender(dataChapterNew);
+      setPage(page - 1);
+      flatRef.current.scrollToIndex({ animated: true, index: 0 });
     }
   };
 
@@ -152,7 +169,7 @@ const HomeScreenDetail = ({ navigation, route }) => {
                     }}
                   >
                     <AntDesign name='user' style={{ fontSize: 20 }} />
-                    <Text style={{ fontSize: 15, marginLeft: 4 }}>
+                    <Text style={{ fontSize: 15, marginRight: 8 }}>
                       {data?.author ? data.author : "Đang cập nhật"}
                     </Text>
                   </View>
@@ -221,50 +238,67 @@ const HomeScreenDetail = ({ navigation, route }) => {
             >
               Danh sách chương
             </Text>
-            <FlatList
-              data={dataRender}
-              style={{ minHeight: 300 }}
-              onEndReached={handleLoadMore}
-              onEndReachedThreshold={0.05}
-              renderItem={({ item, index }) => {
-                const isExist = chapters.some((element) => {
-                  return element == item.href;
-                });
+            <ScrollView>
+              {page > 1 && (
+                <Button
+                  onPress={handlePreMore}
+                  style={{ marginTop: 8, marginBottom: 16 }}
+                  title='Xem tập mới hơn'
+                />
+              )}
+              <FlatList
+                data={dataRender}
+                ref={flatRef}
+                // onEndReached={handleLoadMore}
+                // onEndReachedThreshold={0.05}
+                style={{ minHeight: 300 }}
+                renderItem={({ item, index }) => {
+                  const isExist = chapters.some((element) => {
+                    return element == item.href;
+                  });
 
-                return (
-                  <TouchableOpacity
-                    key={item.href}
-                    onPress={() =>
-                      navigation.navigate("Chap", {
-                        href: item.href,
-                        id: href,
-                        name: data?.name,
-                        namechap: item.name,
-                        vitri: index % 20,
-                        page: Math.ceil((index + 1) / 20),
-                      })
-                    }
-                  >
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        paddingVertical: 6,
-                      }}
+                  return (
+                    <TouchableOpacity
+                      key={item.href}
+                      onPress={() =>
+                        navigation.navigate("Chap", {
+                          href: item.href,
+                          id: href,
+                          name: data?.name,
+                          namechap: item.name,
+                          vitri: index % 20,
+                          page: Math.ceil((index + 1) / 20),
+                        })
+                      }
                     >
-                      <Text style={{ color: isExist ? "#ccc" : "#000" }}>
-                        {item.name}
-                      </Text>
-                      <Text>{item.time}</Text>
-                    </View>
-                  </TouchableOpacity>
-                );
-                // <Text>{item.name}</Text>
-              }}
-              keyExtractor={(item, index) => index}
-              ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
-            />
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          paddingVertical: 6,
+                        }}
+                      >
+                        <Text style={{ color: isExist ? "#ccc" : "#000" }}>
+                          {item.name}
+                        </Text>
+                        <Text>{item.time}</Text>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                  // <Text>{item.name}</Text>
+                }}
+                keyExtractor={(item, index) => index}
+                ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
+              />
+              {page * limit < data.chapters.length && (
+                <Button
+                  onPress={handleNextMore}
+                  style={{ marginTop: 8, marginBottom: 16 }}
+                  title='Xem tập cũ hơn'
+                />
+              )}
+            </ScrollView>
           </ScrollView>
         )}
       </View>

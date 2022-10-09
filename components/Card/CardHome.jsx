@@ -1,5 +1,7 @@
 import React from "react";
 import {
+  Dimensions,
+  Image,
   ImageBackground,
   StyleSheet,
   Text,
@@ -7,9 +9,13 @@ import {
   useColorScheme,
   View,
 } from "react-native";
+import AutoHeightImage from "react-native-auto-height-image";
 import { useSelector } from "react-redux";
 import COLORS from "../../constants/color";
 import { getImage } from "../../utils";
+
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 const CardHome = ({ href, img, name, newChapters, navigation }) => {
   const colorScheme = useColorScheme();
@@ -17,11 +23,7 @@ const CardHome = ({ href, img, name, newChapters, navigation }) => {
   const { chapters, comics } = useSelector((state) => state.history);
 
   return (
-    <View
-      style={{
-        ...styles.container,
-      }}
-    >
+    <View style={styles.container}>
       <TouchableOpacity
         onPress={() =>
           navigation.navigate("HomeDetail", {
@@ -30,10 +32,7 @@ const CardHome = ({ href, img, name, newChapters, navigation }) => {
           })
         }
       >
-        <ImageBackground
-          style={styles.image}
-          source={{ uri: getImage(img) }}
-        ></ImageBackground>
+        <Image style={styles.image} source={{ uri: getImage(img) }} />
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() =>
@@ -93,12 +92,11 @@ const styles = StyleSheet.create({
     width: "100%",
     aspectRatio: 168 / 223,
     borderRadius: 5,
-    height: 240,
   },
   container: {
-    width: 180,
+    width: windowWidth * 0.45,
     marginTop: 16,
-    marginHorizontal: 5,
+    marginHorizontal: 8,
   },
   name: {
     fontSize: 15,

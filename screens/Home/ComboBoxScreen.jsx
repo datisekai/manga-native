@@ -4,12 +4,12 @@ import React, { useMemo, useState } from "react";
 import {
   Dimensions,
   FlatList,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import { ScrollView } from "react-native-virtualized-view";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DetailAPI from "../../actions/detail";
 import CustomHeader from "../../components/CustomHeader";
