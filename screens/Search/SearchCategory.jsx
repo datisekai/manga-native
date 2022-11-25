@@ -10,9 +10,9 @@ import { ScrollView } from "react-native-virtualized-view";
 const SearchCategory = ({ navigation, route }) => {
   const { name, id } = route.params;
 
-  const { data, isLoading } = useQuery(["searchCategory", name], () => {
-    if (name) {
-      return SearchAPI.category(name);
+  const { data, isLoading } = useQuery(["searchCategory", id], () => {
+    if (id) {
+      return SearchAPI.category(id);
     }
   });
 

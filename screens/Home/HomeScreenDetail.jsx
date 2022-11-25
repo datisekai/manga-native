@@ -38,6 +38,7 @@ const HomeScreenDetail = ({ navigation, route }) => {
 
   const { data, isLoading } = useQuery(["detail", href], () => {
     if (href) {
+      console.log(href);
       return DetailAPI.detail(href);
     }
   });
@@ -88,22 +89,22 @@ const HomeScreenDetail = ({ navigation, route }) => {
       const start = page * limit;
       const end = (page + 1) * limit;
       const dataChapterNew = data.chapters.slice(start, end);
-      setDataRender(dataChapterNew);
+      setDataRender([...dataRender, ...dataChapterNew]);
       setPage(page + 1);
       flatRef.current.scrollToIndex({ animated: true, index: 0 });
     }
   };
 
-  const handlePreMore = () => {
-    if (page > 1) {
-      const start = (page - 1 - 1) * limit;
-      const end = (page - 1) * limit;
-      const dataChapterNew = data.chapters.slice(start, end);
-      setDataRender(dataChapterNew);
-      setPage(page - 1);
-      flatRef.current.scrollToIndex({ animated: true, index: 0 });
-    }
-  };
+  // const handlePreMore = () => {
+  //   if (page > 1) {
+  //     const start = (page - 1 - 1) * limit;
+  //     const end = (page - 1) * limit;
+  //     const dataChapterNew = data.chapters.slice(start, end);
+  //     setDataRender([...dataChapterNew, ...dataRender]);
+  //     setPage(page - 1);
+  //     flatRef.current.scrollToIndex({ animated: true, index: 0 });
+  //   }
+  // };
 
   return (
     <SafeAreaView
@@ -143,6 +144,7 @@ const HomeScreenDetail = ({ navigation, route }) => {
                     flexDirection: "row",
                     justifyContent: "space-between",
                     width: windowWidth,
+                    marginTop: 20,
                   }}
                 >
                   <View
@@ -151,7 +153,6 @@ const HomeScreenDetail = ({ navigation, route }) => {
                       alignItems: "center",
                       marginLeft: 8,
                       justifyContent: "center",
-                      marginTop: 20,
                     }}
                   >
                     <AntDesign name='wifi' style={{ fontSize: 20 }} />
@@ -239,13 +240,13 @@ const HomeScreenDetail = ({ navigation, route }) => {
               Danh sách chương
             </Text>
             <ScrollView>
-              {page > 1 && (
+              {/* {page > 1 && (
                 <Button
                   onPress={handlePreMore}
                   style={{ marginTop: 8, marginBottom: 16 }}
                   title='Xem tập mới hơn'
                 />
-              )}
+              )} */}
               <FlatList
                 data={dataRender}
                 ref={flatRef}

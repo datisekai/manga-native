@@ -19,7 +19,7 @@ const HomeAPI = {
   },
   hot: async (page = 1) => {
     try {
-      const result = await axiosClient.get(`/home/hot?page=${page}`);
+      const result = await axiosClient.get(`/home/hot?page=3`);
       return result.data.data;
     } catch (error) {
       console.log(error);

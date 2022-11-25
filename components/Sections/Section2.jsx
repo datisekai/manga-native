@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import {
+  Dimensions,
   FlatList,
   LogBox,
   StyleSheet,
@@ -11,6 +12,8 @@ import { ScrollView } from "react-native-virtualized-view";
 import COLORS from "../../constants/color";
 import CardHome from "../Card/CardHome";
 import CardHomeSkeleton from "../Skeleton/CardHomeSkeleton";
+
+const windowWidth = Dimensions.get("window").width;
 
 const Section2 = ({ data, label, navigation, isLoading }) => {
   const colorScheme = useColorScheme();
@@ -67,9 +70,12 @@ const styles = StyleSheet.create({
   },
   container: {
     marginTop: 16,
+    marginHorizontal: 4,
+    width: windowWidth,
   },
   list: {
     justifyContent: "center",
     alignItems: "center",
+    width: "100%",
   },
 });

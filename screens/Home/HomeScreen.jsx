@@ -41,7 +41,6 @@ const HomeScreen = ({ navigation }) => {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        paddingHorizontal: 4,
       }}
     >
       <CustomHeader navigation={navigation} title='Trang chủ' isHome={true} />

@@ -94,9 +94,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   container: {
-    width: windowWidth * 0.45,
+    width: windowWidth * 0.5 - 10,
     marginTop: 16,
-    marginHorizontal: 8,
+    marginHorizontal: 3,
   },
   name: {
     fontSize: 15,
@@ -108,7 +108,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 4,
   },
-
   listChapter: {
     marginTop: 8,
   },

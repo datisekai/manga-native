@@ -1,6 +1,8 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Skeleton } from "@rneui/themed";
+
+const windowWidth = Dimensions.get("window").width;
 
 const CardHomeSkeleton = () => {
   return (
@@ -44,9 +46,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   container: {
-    width: 180,
+    width: windowWidth * 0.5 - 10,
     marginTop: 16,
-    marginHorizontal: 8,
+    marginHorizontal: 3,
   },
   name: {
     fontSize: 15,

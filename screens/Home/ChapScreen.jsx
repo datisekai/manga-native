@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useQuery } from "@tanstack/react-query";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Dimensions, FlatList, Image, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-virtualized-view";
@@ -23,6 +23,9 @@ const ChapScreen = ({ navigation, route }) => {
   //tên truyện: name
   //tên chap: namechap
   const { chapters, comics } = useSelector((state) => state.history);
+  // const [pageImage, setPageImage] = useState(1);
+
+  // const limitImage = 5;
 
   const { href, id, name, namechap, vitri, page } = route.params;
   const limit = 20;
@@ -47,12 +50,26 @@ const ChapScreen = ({ navigation, route }) => {
       }
     }
   );
-  const { data, isLoading } = useQuery(["chap", href], () => {
+  const { data, isLoading, isFetching } = useQuery(["chap", href], () => {
     if (href) {
       return DetailAPI.chap(href);
     }
   });
 
+  // const dataImages = useMemo(() => {
+  //   if (data) {
+  //     const start = (pageImage - 1) * limitImage;
+  //     const end = pageImage * limitImage;
+  //     return data.slice(start, end);
+  //   }
+  //   return [];
+  // }, [data, pageImage]);
+
+  // const handleInfiniteImage = () => {
+  //   if (data) {
+  //     setPageImage(pageImage + 1);
+  //   }
+  // };
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -74,17 +91,18 @@ const ChapScreen = ({ navigation, route }) => {
     }
   }, [href]);
 
-  console.log(data);
   return (
     <SafeAreaView>
       <CustomHeader navigation={navigation} title={"Chi tiết truyện"} />
-      {isLoading ? (
+      {isFetching ? (
         <ChapSkeleton />
       ) : (
         <ScrollView contentContainerStyle={{ paddingBottom: 50, zIndex: 1 }}>
           <FlatList
             data={data}
             keyExtractor={(item, index) => index}
+            // onEndReached={handleInfiniteImage}
+            // onEndReachedThreshold={0.05}
             ListHeaderComponent={
               <>
                 <Headerchitiettruyenc name={name} namechap={namechap} />
@@ -117,16 +135,6 @@ const ChapScreen = ({ navigation, route }) => {
               />
             }
             renderItem={({ item }) => (
-              // <Image
-              //   key={item.img}
-              //   style={{
-              //     width: "100%",
-              //     aspectRatio: 320 / 455,
-              //     marginBottom: 4,
-              //     resizeMode: "contain",
-              //   }}
-              //   source={{ uri: getImageDetail(getImage(item.img)) }}
-              // />
               <AutoHeightImage
                 source={{ uri: getImageDetail(getImage(item.img)) }}
                 width={windowWidth}
@@ -134,13 +142,6 @@ const ChapScreen = ({ navigation, route }) => {
             )}
           />
           <View style={{ marginBottom: 40 }}></View>
-          {/* {data?.map((item) => (
-          <Image
-            key={item.img}
-            style={{ width: "100%", aspectRatio: 320 / 700, marginTop: 4 }}
-            source={{ uri: getImageDetail(getImage(item.img)) }}
-          />
-        ))} */}
         </ScrollView>
       )}
     </SafeAreaView>

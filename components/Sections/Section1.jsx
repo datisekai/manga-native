@@ -50,7 +50,7 @@ const Section1 = ({ data, label, navigation, isLoading }) => {
             </TouchableOpacity>
           )}
           keyExtractor={(item) => item.href}
-          ItemSeparatorComponent={() => <View style={{ width: 16 }} />}
+          ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
         />
       )}
     </View>
@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 18,
     marginBottom: 8,
+    marginLeft: 4,
   },
   container: {
     marginTop: 16,

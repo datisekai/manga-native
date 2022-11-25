@@ -1,5 +1,7 @@
 import React from "react";
 import {
+  Dimensions,
+  Image,
   ImageBackground,
   StyleSheet,
   Text,
@@ -10,6 +12,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import COLORS from "../../constants/color";
 import { getImage } from "../../utils";
+
+const windowWidth = Dimensions.get("window").width;
 
 const CardHistory = ({ href, img, name, navigation }) => {
   const colorScheme = useColorScheme();
@@ -32,10 +36,7 @@ const CardHistory = ({ href, img, name, navigation }) => {
       }}
     >
       <TouchableOpacity onPress={handlePress}>
-        <ImageBackground
-          style={styles.image}
-          source={{ uri: getImage(img) }}
-        ></ImageBackground>
+        <Image style={styles.image} source={{ uri: getImage(img) }} />
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() =>
@@ -63,12 +64,11 @@ const styles = StyleSheet.create({
     width: "100%",
     aspectRatio: 168 / 223,
     borderRadius: 5,
-    height: 240,
   },
   container: {
-    width: 180,
+    width: windowWidth * 0.5 - 10,
     marginTop: 16,
-    marginHorizontal: 5,
+    marginHorizontal: 3,
   },
   name: {
     fontSize: 15,
